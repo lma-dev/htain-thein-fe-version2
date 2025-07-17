@@ -3,7 +3,7 @@
 A scalable, maintainable, and versioned frontend application using **Next.js (App Router)**, integrated with a **Laravel API backend**, supporting:
 
 * 🌐 Localization (no page refresh)
-* 🧩 Modular folder structure with versioning (`v1`)
+* 🧹 Modular folder structure with versioning (`v1`)
 * 🔒 Secure route middleware
 * ⚙️ API service abstraction (Laravel)
 * 🧪 Zod validation
@@ -18,33 +18,20 @@ A scalable, maintainable, and versioned frontend application using **Next.js (Ap
 
 ```
 src/
-├── app/
-│   ├── [locale]/v1/
-│   │   ├── (pages)/                # Route pages (dashboard, login, etc.)
-│   │   │   ├── dashboard/
-│   │   │   ├── login/
-│   │   │   └── ...
-│   │   ├── layout.tsx              # v1 layout per locale
-│   │   └── page.tsx                # entry page
-│   ├── _components/                # Shared UI components
-│   ├── _hooks/                     # Custom React hooks
-│   ├── _lib/                       # Utilities (e.g., axios.ts, helpers)
-│   ├── _middleware/               # Auth and route protection middleware
-│   ├── _services/                  # API service layer (Laravel endpoints)
-│   ├── _locales/                   # i18n JSON files (en.json, ja.json, etc.)
-│   └── layout.tsx                  # Global layout
-│
-├── public/                         # Static assets (images, favicon, etc.)
-├── styles/                         # Tailwind config and globals
-│
-├── .storybook/                     # Optional Storybook config
-├── tests/                          # Testing folder (unit, integration, e2e)
-│
-├── middleware.ts                   # Next.js middleware for auth & i18n
-├── next.config.js                  # Next.js config (incl. i18n + aliases)
-├── tsconfig.json                   # TypeScript config with path aliases
-├── .env.local                      # Environment variables
-└── README.md                       # Project documentation
+├── app/                         # App Router pages (localized routes)
+├── _components/                # Shared UI components
+├── _enums/                     # Centralized enums
+├── _hooks/                     # Custom React hooks
+├── _libs/                      # Utilities (axios, helpers, etc.)
+├── _locales/                   # i18n JSON files (en.json, ja.json, etc.)
+├── _middleware/                # Middleware logic (auth, i18n, roles)
+├── _schemas/                   # Zod schemas (validation)
+├── _services/                  # API service layer (Laravel endpoints)
+├── _storybook/                 # Storybook setup
+├── _styles/                    # Tailwind config and global styles
+├── _utils/                     # Utility functions/helpers
+├── stories/                    # Storybook stories
+├── types/                      # Global TypeScript types
 ```
 
 ---
@@ -69,13 +56,13 @@ src/
 
 ---
 
-## 🚀 Installation
+## 🚀 Getting Started
 
 ```bash
 # Install dependencies
 pnpm install
 
-# Run dev server
+# Run development server
 pnpm dev
 ```
 
@@ -83,30 +70,30 @@ pnpm dev
 
 ## 🔐 Auth & Middleware
 
-* **Lucia Auth**: manages sessions, tokens, and user states.
-* **middleware.ts**: handles route protection and i18n redirects.
-* Easily extendable with role-based guards inside `src/_middleware/`.
+* **Next Auth**: Manages sessions, tokens, and user states.
+* **`middleware.ts`**: Handles route protection and locale redirection.
+* Extendable with role-based guards inside `src/app/_middleware/`.
 
 ---
 
 ## 🌍 Localization
 
 * Powered by [`next-intl`](https://next-intl-docs.vercel.app/)
-* Supports language prefix in URLs like `/en/v1/dashboard`, `/ja/v1/login`
-* No page refresh when changing locale.
+* Supports URL-based languages like `/en/v1/dashboard`, `/ja/v1/login`
+* No page refresh when switching languages
 
 ---
 
 ## 🧪 Validation
 
-Each form or API input uses a Zod schema in its feature folder:
+Each form or feature can include a Zod schema locally:
 
 ```
 src/
 └── app/
     └── [locale]/v1/(pages)/login/
         ├── LoginForm.tsx
-        ├── schema.ts         ← Zod validation schema
+        └── schema.ts         ← Zod validation schema
 ```
 
 ---
@@ -116,30 +103,31 @@ src/
 Configured in `tsconfig.json`:
 
 ```json
-"@components/*": ["src/app/_components/*"],
-"@lib/*": ["src/app/_lib/*"],
-"@services/*": ["src/app/_services/*"]
+{
+  "@components/*": ["src/_components/*"],
+  "@lib/*": ["src/_libs/*"],
+  "@services/*": ["src/_services/*"],
+  "@schemas/*": ["src/_schemas/*"],
+  "@enums/*": ["src/_enums/*"],
+  "@utils/*": ["src/_utils/*"],
+  "@types/*": ["src/types/*"]
+}
 ```
 
 ---
 
-## 🔀 Version Control
+## 🔀 Versioning Support
 
-Routes and logic are separated by version inside:
-
-```
-src/app/[locale]/v1/
-```
-
-Future versions can live beside it, e.g.:
+Easily maintain multiple frontend versions in parallel:
 
 ```
-src/app/[locale]/v2/
+src/app/[locale]/v1/    ← Current version
+src/app/[locale]/v2/    ← Future version
 ```
 
 ---
 
-## 🧼 To Do
+## ✅ To-Do
 
 * [ ] Add CI/CD GitHub Actions
 * [ ] Add testing setup (Vitest or Playwright)
@@ -151,6 +139,9 @@ src/app/[locale]/v2/
 ## 📄 License
 
 MIT — Free to use and modify.
-# htain-thein-fe-new
-# htain-thein-fe-new
-# htain-thein-fe-new
+
+---
+
+**Repo:** `htain-thein-fe-v2`
+
+ 

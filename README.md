@@ -10,29 +10,47 @@ A scalable, maintainable, and versioned frontend application using **Next.js (Ap
 * 🎨 Tailwind CSS + shadcn/ui + Lucide icons
 * ⚛️ TanStack Query + Table
 * ✍️ Alias-based imports
-* 🔐 Lucia Auth
+* 🔐 Next Auth
 
 ---
 
 ## 📁 Folder Structure (v1)
 
-```
+````
+public/
 src/
-├── app/                         # App Router pages (localized routes)
-├── _components/                # Shared UI components
-├── _enums/                     # Centralized enums
-├── _hooks/                     # Custom React hooks
-├── _libs/                      # Utilities (axios, helpers, etc.)
-├── _locales/                   # i18n JSON files (en.json, ja.json, etc.)
-├── _middleware/                # Middleware logic (auth, i18n, roles)
-├── _schemas/                   # Zod schemas (validation)
-├── _services/                  # API service layer (Laravel endpoints)
-├── _storybook/                 # Storybook setup
-├── _styles/                    # Tailwind config and global styles
-├── _utils/                     # Utility functions/helpers
-├── stories/                    # Storybook stories
-├── types/                      # Global TypeScript types
-```
+├── app/
+│   ├── [locale]/(pages)/v1/       # Localized versioned route pages
+│   │   ├── dashboard/              # Example feature folder
+│   │   └── login/                  # Login feature folder
+│   ├── layout.tsx                  # Root layout
+│   ├── page.tsx                    # Redirect entry point
+│   └── favicon.ico                 # App icon
+├── _components/                   # Shared UI components
+├── _enums/                        # Centralized enums
+├── _hooks/                        # Custom React hooks
+├── _libs/                         # Utilities (axios, helpers, etc.)
+├── _locales/                      # i18n JSON files (en.json, ja.json, etc.)
+├── _middleware/                   # Middleware logic (auth, i18n, roles)
+├── _schemas/                      # Zod schemas (validation)
+├── _services/                     # API service layer (Laravel endpoints)
+├── _storybook/                    # Storybook setup
+├── _styles/                       # Tailwind config and global styles
+├── _utils/                        # Utility functions/helpers
+├── stories/                       # Storybook stories
+├── types/                         # Global TypeScript types
+├── example.ts                     # Example utility or config
+.env.example
+.gitignore
+README.md
+next-env.d.ts
+next.config.ts
+package-lock.json
+package.json
+pnpm-lock.yaml
+postcss.config.mjs
+tsconfig.json```
+
 
 ---
 
@@ -64,7 +82,7 @@ pnpm install
 
 # Run development server
 pnpm dev
-```
+````
 
 ---
 
@@ -142,6 +160,6 @@ MIT — Free to use and modify.
 
 ---
 
-**Repo:** `htain-thein-fe-v2`
+**Repo:** `htain-thein-fe-new`
 
  

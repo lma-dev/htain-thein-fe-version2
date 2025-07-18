@@ -24,12 +24,13 @@
       "@/lib/*": ["_libs/*"],
       "@/services/*": ["_services/*"],
       "@/hooks/*": ["_hooks/*"], 
-      "@/locales/*": ["_locales/*"],
+      "@/messages/*": ["messages/*"],
       "@/pages/*": ["[locale]/(pages)/*"],
-      "@/middleware/*": ["_middleware/*"],
       "@/styles/*": ["_styles/*"],
       "@/utils/*": ["_utils/*"],
-      "@/types/*": ["_types/*"]
+      "@/types/*": ["_types/*"],
+      "@/config/*": ["_config/*"],
+      "@/i18n/*": ["i18n/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

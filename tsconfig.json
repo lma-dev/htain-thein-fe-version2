@@ -20,12 +20,13 @@
       }
     ],
     "paths": {
+      "@/app/*": ["app/*"],
       "@/components/*": ["components/*"],
       "@/libs/*": ["libs/*"],
       "@/services/*": ["services/*"],
       "@/hooks/*": ["hooks/*"], 
       "@/messages/*": ["messages/*"],
-      "@/pages/*": ["[locale]/(pages)/*"],
+      "@/v1/*": ["[locale]/(pages)/*"],
       "@/styles/*": ["styles/*"],
       "@/utils/*": ["utils/*"],
       "@/types/*": ["types/*"],

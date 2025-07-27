@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { AppIcon } from "@/app/_components/ui/app-icon";
+import { AppIcon } from "@/app/[locale]/_components/ui/app-icon";
 import { Bell } from "lucide-react";
 
 const meta: Meta<typeof AppIcon> = {

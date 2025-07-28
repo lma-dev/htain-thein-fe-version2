@@ -1,5 +1,6 @@
 import { TopNavbar } from "@/app/[locale]/_components/layout/top-navbar";
 import { Sidebar } from "@/app/[locale]/_components/layout/sidebar";
+import SettingFloatButton from "@/app/[locale]/_components/ui/setting-floating-button";
 
 export default function V1Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -11,6 +12,9 @@ export default function V1Layout({ children }: { children: React.ReactNode }) {
         </aside>
         <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-muted">
           {children}
+          <div>
+            <SettingFloatButton />
+          </div>
         </main>
       </div>
     </>

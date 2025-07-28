@@ -1,9 +1,17 @@
-import React from "react";
+import { Toaster } from "sonner";
 import "../styles/globals.css";
-interface RootLayoutProps {
-  children: React.ReactNode;
-}
 
-export default function RootLayout({ children }: RootLayoutProps) {
-  return <>{children}</>;
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body>
+        <Toaster richColors position="top-right" closeButton />
+        {children}
+      </body>
+    </html>
+  );
 }

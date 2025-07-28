@@ -18,7 +18,8 @@ type UserListResponse = {
 
 type UserFilters = {
     role?: string
-    search?: string
+    generalSearch?: string
+    accountStatus?: string
 }
 
 type SortOption = {
@@ -39,8 +40,11 @@ export const fetchUsers = async (
     if (filters.role && filters.role !== 'clear') {
         params.set('role', filters.role)
     }
-    if (filters.search) {
-        params.set('search', filters.search)
+    if (filters.generalSearch) {
+        params.set('generalSearch', filters.generalSearch)
+    }
+    if (filters.accountStatus && filters.accountStatus !== 'clear') {
+        params.set('accountStatus', filters.accountStatus)
     }
     if (sort) {
         params.set('sortBy', sort.field)

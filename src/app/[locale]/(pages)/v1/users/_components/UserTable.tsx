@@ -25,23 +25,30 @@ import {
 } from "@/components/ui/table";
 import { useUsersQuery } from "@/features/users/api";
 import { createUserColumns } from "./UserTableColumns";
+import { PaginationFooter } from "@/app/[locale]/_components/ui/pagination-footer";
 
 type DialogType = "delete" | "export" | null;
 
 interface UserTableProps {
   showDialog: (type: DialogType, method: () => void) => void;
+  t: any; // Translation function
 }
 
-const UserTable: React.FC<UserTableProps> = ({ showDialog }) => {
+const UserTable: React.FC<UserTableProps> = ({ showDialog, t }) => {
   const [page, setPage] = useState(1);
   const [roleFilter, setRoleFilter] = useState<string | undefined>(undefined);
+  const [statusFilter, setStatusFilter] = useState<string | undefined>(
+    undefined
+  );
+
   const [searchFilter, setSearchFilter] = useState("");
 
   const locale = useLocale();
 
   const { data, isLoading, refetch } = useUsersQuery(page, {
     role: roleFilter,
-    search: searchFilter,
+    generalSearch: searchFilter,
+    accountStatus: statusFilter,
   });
 
   const userColumns = createUserColumns(showDialog);
@@ -52,11 +59,7 @@ const UserTable: React.FC<UserTableProps> = ({ showDialog }) => {
     getCoreRowModel: getCoreRowModel(),
   });
 
-  console.log("User data:", data);
-
-  if (isLoading) return <div>Loading users...</div>;
-
-  if (!data || !data.data?.length) return <div>No users found.</div>;
+  if (isLoading) return <div>{t("loadingUsers")}</div>;
 
   return (
     <div className="space-y-4">
@@ -86,13 +89,30 @@ const UserTable: React.FC<UserTableProps> = ({ showDialog }) => {
               <SelectItem value="clear">All Roles</SelectItem>
             </SelectContent>
           </Select>
+
+          <Select
+            value={statusFilter}
+            onValueChange={(val) => {
+              setStatusFilter(val || undefined);
+              refetch();
+            }}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Filter by Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="ACTIVE">{t("active")}</SelectItem>
+              <SelectItem value="SUSPENDED">{t("suspend")}</SelectItem>
+              <SelectItem value="clear">All Statuses</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <Link
           href={`/${locale}/v1/users/create`}
           className="inline-flex items-center"
         >
-          <Button>Create User</Button>
+          <Button>{t("createUser")}</Button>
         </Link>
       </div>
 
@@ -112,6 +132,7 @@ const UserTable: React.FC<UserTableProps> = ({ showDialog }) => {
               </TableRow>
             ))}
           </TableHeader>
+
           <TableBody>
             {table.getRowModel().rows.map((row) => (
               <TableRow key={row.id}>
@@ -126,25 +147,12 @@ const UserTable: React.FC<UserTableProps> = ({ showDialog }) => {
         </Table>
       </div>
 
-      <div className="flex items-center justify-between">
-        <Button
-          disabled={page <= 1}
-          onClick={() => setPage((prev) => prev - 1)}
-        >
-          Previous
-        </Button>
-
-        <div className="text-sm text-muted-foreground">
-          Page {data?.meta.currentPage} of {data?.meta.totalPages}
-        </div>
-
-        <Button
-          disabled={page >= (data?.meta.totalPages ?? 1)}
-          onClick={() => setPage((prev) => prev + 1)}
-        >
-          Next
-        </Button>
-      </div>
+      <PaginationFooter
+        page={page}
+        totalPages={data?.meta.totalPages ?? 1}
+        onPageChange={setPage}
+        t={t}
+      />
     </div>
   );
 };

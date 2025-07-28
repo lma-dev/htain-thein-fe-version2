@@ -1,21 +1,12 @@
-"use client";
-
+import React, { useState } from "react";
 import {
   useReactTable,
   getCoreRowModel,
   flexRender,
 } from "@tanstack/react-table";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { userColumns } from "./UserTableColumns";
-import { useState } from "react";
-import { useUsersQuery } from "@/features/users/api";
+import { useLocale } from "next-intl";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -24,20 +15,36 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { useLocale } from "next-intl";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { useUsersQuery } from "@/features/users/api";
+import { createUserColumns } from "./UserTableColumns";
 
-const UserTable = () => {
+type DialogType = "delete" | "export" | null;
+
+interface UserTableProps {
+  showDialog: (type: DialogType, method: () => void) => void;
+}
+
+const UserTable: React.FC<UserTableProps> = ({ showDialog }) => {
   const [page, setPage] = useState(1);
   const [roleFilter, setRoleFilter] = useState<string | undefined>(undefined);
   const [searchFilter, setSearchFilter] = useState("");
+
   const locale = useLocale();
 
   const { data, isLoading, refetch } = useUsersQuery(page, {
     role: roleFilter,
     search: searchFilter,
   });
+
+  const userColumns = createUserColumns(showDialog);
 
   const table = useReactTable({
     data: data?.data ?? [],
@@ -50,6 +57,7 @@ const UserTable = () => {
   if (isLoading) return <div>Loading users...</div>;
 
   if (!data || !data.data?.length) return <div>No users found.</div>;
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-4">
@@ -140,4 +148,5 @@ const UserTable = () => {
     </div>
   );
 };
+
 export default UserTable;

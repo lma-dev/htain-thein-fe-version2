@@ -4,7 +4,11 @@ import { User } from "@/features/users/types";
 import { UserActionDropdown } from "@/v1/users/_components/UserActionsDropdown";
 import { ColumnDef } from "@tanstack/react-table";
 
-export const userColumns: ColumnDef<User>[] = [
+type DialogType = "delete" | "export" | null;
+
+export const createUserColumns = (
+  showDialog: (type: DialogType, method: () => void) => void
+): ColumnDef<User>[] => [
   {
     accessorKey: "name",
     header: "Name",
@@ -30,9 +34,7 @@ export const userColumns: ColumnDef<User>[] = [
     header: "Actions",
     cell: ({ row }: { row: any }) => {
       const user = row.original;
-      return <UserActionDropdown user={user} />;
+      return <UserActionDropdown user={user} showDialog={showDialog} />;
     },
   },
 ];
-
-export default userColumns;

@@ -46,6 +46,7 @@
     "currency": "Kyat",
     "content": "Content",
     "create_deposit_request": "Create Deposit Request",
+    "createRegularCost": "Create Regular Cost",
 
     "deposit": "Deposit",
     "depositRequest": "Deposit Request",
@@ -104,6 +105,7 @@
     "lowPriority": "Low Priority",
     "loadingUsers": "Loading users...",
     "loadingReports": "Loading reports...",
+    "loadingRegularCosts": "Loading regular costs...",
 
     "member": "Member",
     "message": "Message",
@@ -156,6 +158,10 @@
     "requestedTo": "requested to",
     "role": "Role",
     "reportDetail": "Report Detail",
+    "editRegularCost": "Edit Regular Cost",
+    "regularCostDetail": "Regular Cost Detail",
+    "regularCosts": "Regular Costs",
+    "regularCostList": "Regular Cost List",
 
     "select": "Select",
     "send": "Send",

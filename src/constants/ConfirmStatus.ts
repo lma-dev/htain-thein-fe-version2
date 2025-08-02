@@ -1,7 +1,7 @@
 
 
-export const ConfirmStatus= {
-    ACCEPT:"ACCEPT",
-    REJECT: "REJECT",
-  }
-  
+export const ConfirmStatus = {
+  ACCEPTED: "ACCEPTED",
+  REJECTED: "REJECTED",
+  PENDING: "PENDING",
+}

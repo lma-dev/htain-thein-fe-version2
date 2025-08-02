@@ -33,7 +33,8 @@
       "@/features/*": ["features/*"],
       "@/config/*": ["config/*"],
       "@/i18n/*": ["i18n/*"],
-      "@/auth/*": ["app/[locale]/(auth)/login/*"]
+      "@/auth/*": ["app/[locale]/(auth)/login/*"],
+      "@/constants/*": ["constants/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

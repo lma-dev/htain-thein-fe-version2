@@ -36,6 +36,7 @@ export const NormalButton = ({
 };
 
 export const FormSubmitButton = ({ text }: { text: string }) => {
+  console.log("FormSubmitButton rendered with text:", text);
   return (
     <div>
       <Button variant="ghost" size="lg" type="submit" aria-label="Submit">

@@ -2,7 +2,14 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { userListSchema, userSchema } from './schemas/userSchema'
 import type { User } from './types'
 import ToastAlert from '@/app/[locale]/_components/ui/toast-box'
-import { createData, deleteSingleData, editData, exportData, fetchAllData, fetchSingleData } from '@/libs/ApiMethodHelper'
+import {
+    createData,
+    deleteSingleData,
+    editData,
+    exportData,
+    fetchAllData,
+    fetchSingleData,
+} from '@/libs/ApiMethodHelper'
 
 // Response types
 type UserListResponse = {
@@ -52,9 +59,16 @@ export const fetchUsers = async (
     }
 
     const res = await fetchAllData(`/users?${params.toString()}`)
+    const result = userListSchema.safeParse(res.data)
+
+    if (!result.success) {
+        console.error("Zod parsing error:", result.error.format())
+        throw new Error("Invalid user list format")
+    }
+
     return {
-        data: userListSchema.parse(res.data),
-        meta: res.meta
+        data: result.data,
+        meta: res.meta,
     }
 }
 
@@ -67,7 +81,7 @@ export const useUsersQuery = (
         queryKey: ['users', page, filters, sort],
         queryFn: () => fetchUsers(page, filters, sort),
         placeholderData: (prev) => prev,
-        staleTime: 1000 * 60 * 5
+        staleTime: 1000 * 60 * 5,
     })
 
 // ------------------------
@@ -75,14 +89,21 @@ export const useUsersQuery = (
 // ------------------------
 export const fetchUser = async (id: number): Promise<User> => {
     const res = await fetchSingleData(`/users/${id}`)
-    return userSchema.parse(res.data)
+    const result = userSchema.safeParse(res.data)
+
+    if (!result.success) {
+        console.error("Zod parsing error:", result.error.format())
+        throw new Error("Invalid user format")
+    }
+
+    return result.data
 }
 
 export const useUserQuery = (id: number) =>
     useQuery({
         queryKey: ['user', id],
         queryFn: () => fetchUser(id),
-        enabled: !!id
+        enabled: !!id,
     })
 
 // ------------------------
@@ -92,13 +113,16 @@ export const useCreateUser = () => {
     const queryClient = useQueryClient()
 
     return useMutation({
-        mutationFn: async (data: any) => {
+        mutationFn: async (data: Omit<User, 'id' | 'createdAt' | 'updatedAt'>) => {
             const res = await createData('/users', data)
             return res.data
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['users'] })
-        }
+        },
+        onError: () => {
+            ToastAlert.error({ message: "Failed to create user" })
+        },
     })
 }
 
@@ -109,7 +133,7 @@ export const useUpdateUser = () => {
     const queryClient = useQueryClient()
 
     return useMutation({
-        mutationFn: async (data: any) => {
+        mutationFn: async (data: Partial<User> & { id: number }) => {
             const { id, ...payload } = data
             const res = await editData(`/users/${id}`, payload)
             return res.data
@@ -117,43 +141,50 @@ export const useUpdateUser = () => {
         onSuccess: (_data, variables) => {
             queryClient.invalidateQueries({ queryKey: ['users'] })
             queryClient.invalidateQueries({ queryKey: ['user', variables.id] })
-        }
+        },
+        onError: () => {
+            ToastAlert.error({ message: "Failed to update user" })
+        },
     })
 }
 
+// ------------------------
+// ✅ DELETE USER
+// ------------------------
 export const useDeleteUser = () => {
-    const queryClient = useQueryClient();
+    const queryClient = useQueryClient()
 
     return useMutation({
         mutationFn: async ({ id }: { id: number }) => {
-            await deleteSingleData(`/users/${id}`);
+            await deleteSingleData(`/users/${id}`)
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["users"] });
+            queryClient.invalidateQueries({ queryKey: ['users'] })
         },
         onError: () => {
-            ToastAlert.error({ message: "Failed to delete user" });
+            ToastAlert.error({ message: "Failed to delete user" })
         },
-    });
-};
+    })
+}
 
+// ------------------------
+// ✅ EXPORT USER REPORT
+// ------------------------
 export const useExportUser = () => {
     return useMutation({
         mutationFn: async ({ id }: { id: number }) => {
-            const response = await exportData(`/user-report/${id}`);
-            const currentDate = new Date().toISOString().replace(/:/g, ""); // Get current date and time without colons
-            const filename = `${id}ReportExports_${currentDate}.xlsx`;
+            const response = await exportData(`/user-report/${id}`)
+            const currentDate = new Date().toISOString().replace(/:/g, '')
+            const filename = `${id}ReportExports_${currentDate}.xlsx`
 
-            const blob = new Blob([response.data]);
-            const link = document.createElement("a");
-            link.href = window.URL.createObjectURL(blob);
-            link.download = filename;
-            link.click();
-        },
-        onSuccess: () => {
+            const blob = new Blob([response.data])
+            const link = document.createElement('a')
+            link.href = window.URL.createObjectURL(blob)
+            link.download = filename
+            link.click()
         },
         onError: () => {
-            ToastAlert.error({ message: "Failed to export user" });
+            ToastAlert.error({ message: "Failed to export user" })
         },
-    });
-};
+    })
+}

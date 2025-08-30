@@ -8,13 +8,8 @@ import { useLocale } from "next-intl";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import {
   Table,
   TableBody,
@@ -23,10 +18,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useReportsQuery } from "@/features/reports/api";
+import { useReportsQuery, useUpdateReport } from "@/features/reports/api";
 import { createReportColumns } from "./ReportTableColumns";
 import { PaginationFooter } from "@/app/[locale]/_components/ui/pagination-footer";
 import ReportFilterDropDown from "./ReportFilterDropDown";
+import { useMutation } from "@tanstack/react-query";
+import { ConfirmStatusType } from "@/constants/ConfirmStatus";
 
 type DialogType = "delete" | null;
 
@@ -48,8 +45,12 @@ const ReportTable: React.FC<ReportTableProps> = ({ showDialog, t }) => {
   );
   const [type, setType] = useState<string | undefined>(undefined);
   const [createdAt, setCreatedAt] = useState<string | undefined>(undefined);
+  const [tab, setTab] = useState<"PENDING" | "ACCEPTED" | "REJECTED">(
+    "PENDING"
+  );
 
   const locale = useLocale();
+  const updateReport = useUpdateReport();
 
   const { data, isLoading, refetch } = useReportsQuery(page, {
     amount: amountFilter,
@@ -59,7 +60,22 @@ const ReportTable: React.FC<ReportTableProps> = ({ showDialog, t }) => {
     generalSearch,
   });
 
-  const reportColumns = createReportColumns(locale, showDialog, t);
+  const changeConfirmStatusMutation = useMutation({
+    mutationFn: ({
+      id,
+      confirmStatus,
+    }: {
+      id: number;
+      confirmStatus: ConfirmStatusType;
+    }) => updateReport.mutateAsync({ id, confirmStatus }),
+  });
+
+  const reportColumns = createReportColumns(
+    locale,
+    showDialog,
+    t,
+    changeConfirmStatusMutation
+  );
 
   const table = useReactTable({
     data: data?.data ?? [],
@@ -71,6 +87,21 @@ const ReportTable: React.FC<ReportTableProps> = ({ showDialog, t }) => {
 
   return (
     <div className="space-y-4">
+      <Tabs
+        value={tab}
+        onValueChange={(value) => {
+          setTab(value as any);
+          setStatusFilter(value);
+          setPage(1);
+          refetch();
+        }}
+      >
+        <TabsList>
+          <TabsTrigger value="PENDING">{t("uncheckedReports")}</TabsTrigger>
+          <TabsTrigger value="ACCEPTED">{t("acceptedReports")}</TabsTrigger>
+          <TabsTrigger value="REJECTED">{t("rejectedReports")}</TabsTrigger>
+        </TabsList>
+      </Tabs>
       <div className="flex justify-between items-center">
         <div className="flex gap-4">
           <Input
@@ -85,7 +116,6 @@ const ReportTable: React.FC<ReportTableProps> = ({ showDialog, t }) => {
           <ReportFilterDropDown
             amount={Number(amountFilter) || 0}
             type={type ?? ""}
-            confirmStatus={statusFilter ?? ""}
             createdAt={createdAt ?? ""}
             onAmountChange={(val) => {
               setAmountFilter(val ? val : undefined);
@@ -94,11 +124,6 @@ const ReportTable: React.FC<ReportTableProps> = ({ showDialog, t }) => {
             }}
             onTypeChange={(val) => {
               setType(val || undefined);
-              setPage(1);
-              refetch();
-            }}
-            onConfirmStatusChange={(val) => {
-              setStatusFilter(val || undefined);
               setPage(1);
               refetch();
             }}

@@ -18,6 +18,7 @@
     "available": "Available",
     "availableBalance": "Available Balance",
     "amountPlaceholder": "Amount (required, must be a number)",
+    "acceptedReports": "Accepted Reports",
 
     "back": "Back",
     "balance": "Balance",
@@ -162,6 +163,7 @@
     "regularCostDetail": "Regular Cost Detail",
     "regularCosts": "Regular Costs",
     "regularCostList": "Regular Cost List",
+    "rejectedReports": "Rejected Reports",
 
     "select": "Select",
     "send": "Send",
@@ -190,6 +192,7 @@
     "timeLastWeek": "Since last week",
     "title": "Title",
     "type": "Type",
+
     "unpublished": "UnPublished",
     "updateFailed": "Failed to update",
     "updateSuccess": "Successfully updated",
@@ -208,6 +211,8 @@
     "uploadFileType": "Upload File Type (optional, max 5MB)",
     "uploadFileTypePlaceholder": "Upload File Type (optional, max 5MB)",
     "userManagement": "User Management",
+    "uncheckedReports": "Unchecked Reports",
+    "unreadNotifications": "Unread Notifications",
 
     "verifier": "Verifier",
     "viewAll": "View All",

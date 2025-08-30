@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { userRoleOptions } from '@/features/users/constants/role'
 import { userAccountStatusOptions } from '@/features/users/constants/status'
+import { ConfirmStatus } from '@/constants/ConfirmStatus'
 
 export const createReportSchema = z.object({
     amount:
@@ -19,7 +20,7 @@ export const createReportSchema = z.object({
     type: z.enum(["INCOME", "EXPENSE"], {
         message: "Please select a valid type",
     }),
-    confirmStatus: z.string().min(1).max(255).refine((val) => ["ACCEPTED", "PENDING", "REJECTED"].includes(val), {
+    confirmStatus: z.string().min(1).max(255).refine((val) => [ConfirmStatus.ACCEPTED, ConfirmStatus.PENDING, ConfirmStatus.REJECTED].includes(val), {
         message: "Please select a valid status",
     }),
     verifier_id: z

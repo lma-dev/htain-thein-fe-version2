@@ -1,15 +1,22 @@
-import { ConfirmStatus } from "@/constants/ConfirmStatus";
+import { ConfirmStatus, ConfirmStatusType } from "@/constants/ConfirmStatus";
 import { Report } from "@/features/reports/types";
 import { ReportActionDropdown } from "@/v1/reports/_components/ReportActionsDropdown";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select"; // Example with shadcn/ui
 
 type DialogType = "delete" | null;
 
 export const createReportColumns = (
   locale: string,
   showDialog: (type: DialogType, method: () => void) => void,
-  t: any
+  t: any,
+  changeConfirmStatusMutation: any
 ): ColumnDef<Report>[] => [
   {
     accessorKey: "id",
@@ -60,22 +67,27 @@ export const createReportColumns = (
   {
     accessorKey: "confirmStatus",
     header: () => t("status"),
-    cell: (info) => {
-      const value = info.getValue();
+    cell: ({ row, getValue }) => {
+      const id = row.original.id;
+      const currentStatus = getValue() as ConfirmStatusType;
+
       return (
-        <span
-          className={`mr-2 rounded-full px-2.5 py-0.5 text-xs font-medium ${
-            value === ConfirmStatus.ACCEPTED
-              ? "bg-green-100 text-green-800"
-              : value === ConfirmStatus.PENDING
-                ? "bg-red-100 text-red-800"
-                : value === ConfirmStatus.REJECTED
-                  ? "bg-yellow-100 text-yellow-800"
-                  : ""
-          }`}
+        <Select
+          value={currentStatus}
+          onValueChange={(newStatus: ConfirmStatusType) => {
+            changeConfirmStatusMutation.mutate({
+              id,
+              confirmStatus: newStatus,
+            });
+          }}
         >
-          {String(value ?? "unknown")}
-        </span>
+          <SelectTrigger className="w-[120px]" />
+          <SelectContent>
+            <SelectItem value={ConfirmStatus.ACCEPTED}>Accepted</SelectItem>
+            <SelectItem value={ConfirmStatus.PENDING}>Pending</SelectItem>
+            <SelectItem value={ConfirmStatus.REJECTED}>Rejected</SelectItem>
+          </SelectContent>
+        </Select>
       );
     },
   },

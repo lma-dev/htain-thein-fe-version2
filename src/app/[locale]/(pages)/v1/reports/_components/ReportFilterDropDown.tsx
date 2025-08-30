@@ -22,11 +22,9 @@ import { CurrencyType } from "@/constants/CurrencyType";
 
 interface ReportFilterDropDownType {
   amount?: number;
-  confirmStatus?: string;
   createdAt?: string;
   type?: string;
   onAmountChange: (amount: number) => void;
-  onConfirmStatusChange: (confirmStatus: string) => void;
   onTypeChange: (type: string) => void;
   onCreatedAtChange: (createdAt: string) => void;
   t: any;
@@ -35,11 +33,9 @@ interface ReportFilterDropDownType {
 export default function ReportFilterDropDown({
   amount,
   type,
-  confirmStatus,
   createdAt,
   onAmountChange,
   onTypeChange,
-  onConfirmStatusChange,
   onCreatedAtChange,
   t,
 }: ReportFilterDropDownType) {
@@ -48,7 +44,6 @@ export default function ReportFilterDropDown({
   const handleClear = () => {
     onAmountChange(0);
     onTypeChange("");
-    onConfirmStatusChange("");
     onCreatedAtChange("");
   };
 
@@ -67,7 +62,7 @@ export default function ReportFilterDropDown({
         <div className="space-y-4">
           {/* Amount */}
           <div>
-            <label className="text-sm font-medium text-gray-900 dark:text-white block mb-1">
+            <label className="text-sm font-medium text-gray-900 block mb-1">
               {t("amount")} ({CurrencyType.MMK})
             </label>
             <Input
@@ -80,7 +75,7 @@ export default function ReportFilterDropDown({
 
           {/* Type */}
           <div>
-            <label className="text-sm font-medium text-gray-900 dark:text-white block mb-1">
+            <label className="text-sm font-medium text-gray-900 block mb-1">
               {t("type")}
             </label>
             <Select value={type} onValueChange={onTypeChange}>
@@ -94,28 +89,9 @@ export default function ReportFilterDropDown({
             </Select>
           </div>
 
-          {/* Confirm Status */}
-          <div>
-            <label className="text-sm font-medium text-gray-900 dark:text-white block mb-1">
-              {t("confirmStatus")}
-            </label>
-            <Select
-              value={confirmStatus}
-              onValueChange={(val) => onConfirmStatusChange(val)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder={t("select")} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="CONFIRM">{t("confirm")}</SelectItem>
-                <SelectItem value="PENDING">{t("pending")}</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
           {/* Date */}
           <div>
-            <label className="text-sm font-medium text-gray-900 dark:text-white block mb-1">
+            <label className="text-sm font-medium text-gray-900 block mb-1">
               {t("createDate")}
             </label>
             <Input

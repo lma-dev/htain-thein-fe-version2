@@ -5,3 +5,5 @@ export const ConfirmStatus = {
   REJECTED: "REJECTED",
   PENDING: "PENDING",
 }
+
+export type ConfirmStatusType = typeof ConfirmStatus[keyof typeof ConfirmStatus];
